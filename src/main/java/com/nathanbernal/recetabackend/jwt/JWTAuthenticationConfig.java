@@ -15,10 +15,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import com.nathanbernal.recetabackend.jwt.Constants.*;
+//import com.nathanbernal.recetabackend.jwt.Constants;
 
 @Configuration
 public class JWTAuthenticationConfig {
+
+    JWTAuthenticationConfig () {}
 
     public String getJWTToken(String username) {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
@@ -41,6 +43,11 @@ public class JWTAuthenticationConfig {
 
         return "Bearer " + token;
 
+    }
+
+    public Key getSigningKey(String k) {
+        byte[] keyBytes = Decoders.BASE64.decode(k);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 }

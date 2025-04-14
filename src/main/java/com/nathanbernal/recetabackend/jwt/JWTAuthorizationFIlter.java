@@ -1,21 +1,14 @@
 package com.nathanbernal.recetabackend.jwt;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
-// manual
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-
-import org.springframework.boot.actuate.autoconfigure.security.servlet.SecurityRequestMatchersManagementContextConfiguration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,19 +19,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.nathanbernal.recetabackend.WebSecutiryConfig;
-import com.nathanbernal.recetabackend.jwt.Constants;
-
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private Claims setSigningKey(HttpServletRequest request) {
 
+        JWTAuthenticationConfig authConfig = new JWTAuthenticationConfig();
+
         String jwtToken = request
             .getHeader(Constants.HEADER_AUTHORIZATION_KEY)
             .replace(Constants.TOKEN_BEARER_PREFIX, "");
         return Jwts.parser()
-            .verifyWith((SecretKey) getSigningKey(Constants.SUPER_SECRET_KEY))
+            .verifyWith((SecretKey) authConfig.getSigningKey(Constants.SUPER_SECRET_KEY))
             .build()
             .parseSignedClaims(jwtToken)
             .getPayload();
