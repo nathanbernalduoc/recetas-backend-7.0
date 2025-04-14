@@ -1,10 +1,15 @@
 package com.nathanbernal.recetabackend.jwt;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
+
+// manual
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 import org.springframework.boot.actuate.autoconfigure.security.servlet.SecurityRequestMatchersManagementContextConfiguration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,24 +27,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.nathanbernal.recetabackend.WebSecutiryConfig;
-import com.nathanbernal.recetabackend.jwt.Constants.*;
+import com.nathanbernal.recetabackend.jwt.Constants;
 
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    private final WebSecutiryConfig webSecutiryConfig;
-
-    JWTAuthorizationFilter(WebSecutiryConfig webSecutiryConfig) {
-        this.webSecutiryConfig = webSecutiryConfig;
-    }
-
     private Claims setSigningKey(HttpServletRequest request) {
 
         String jwtToken = request
-            .getHeader(HEADER_AUTHORIZATION_KEY)
-            .replace(TOKEN_BEARER_PREFIX, "");
+            .getHeader(Constants.HEADER_AUTHORIZATION_KEY)
+            .replace(Constants.TOKEN_BEARER_PREFIX, "");
         return Jwts.parser()
-            .verifyWith((SecretKey) getSigningKey(SUPER_SECRET_KEY))
+            .verifyWith((SecretKey) getSigningKey(Constants.SUPER_SECRET_KEY))
             .build()
             .parseSignedClaims(jwtToken)
             .getPayload();
@@ -55,8 +54,8 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean isJWTValid(HttpServletRequest request, HttpServletResponse res) {
-        String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION_KEY);
-        if (authenticationHeader == null || !authenticationHeader.startsWith(TOKEN_BEARER_PREFIX))
+        String authenticationHeader = request.getHeader(Constants.HEADER_AUTHORIZATION_KEY);
+        if (authenticationHeader == null || !authenticationHeader.startsWith(Constants.TOKEN_BEARER_PREFIX))
             return false;
         return true;
     }
@@ -74,11 +73,14 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 } else {
                     SecurityContextHolder.clearContext();
                 }
+            } else {
+                System.out.println("JWT INVALID!");
             }
 
         } catch (Exception ex) {
 
         }
     }
+
 }
  

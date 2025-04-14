@@ -1,6 +1,8 @@
 package com.nathanbernal.recetabackend.jwt;
 
+import java.security.Key;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
 import com.nathanbernal.recetabackend.jwt.Constants.*;
 
 @Configuration
@@ -31,7 +36,7 @@ public class JWTAuthenticationConfig {
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1440))
             .and()
-            .signWith(getSigningKey(SUPER_SECRET_KEY))
+            .signWith(getSigningKey(Constants.SUPER_SECRET_KEY))
             .compact();
 
         return "Bearer " + token;

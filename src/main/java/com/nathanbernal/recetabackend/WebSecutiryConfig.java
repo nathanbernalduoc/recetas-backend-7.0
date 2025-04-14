@@ -1,12 +1,16 @@
 package com.nathanbernal.recetabackend;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.nathanbernal.recetabackend.jwt.Constants;
+import com.nathanbernal.recetabackend.jwt.JWTAuthorizationFilter;
 
 @EnableWebSecurity
 @Configuration
@@ -20,12 +24,12 @@ public class WebSecutiryConfig {
         http
             .csrf( (csrf) -> csrf.disable())
             // solo ruta Login es pública
-            .authorizeHttpRequest( authz -> authz
-                .requestMatchers(HttpMethod.POST, Contansts.LOGIN_URL).permitAll()
+            .authorizeHttpRequests( authz -> authz
+                .requestMatchers(HttpMethod.POST, Constants.LOGIN_URL).permitAll()
                 .anyRequest().authenticated())
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http;
+        return http.build();
 
     } 
 
