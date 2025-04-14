@@ -21,11 +21,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public Login getUsuario(@RequestBody String user, @RequestBody String password) {
+    public Login getUsuario(@RequestBody Login loginReq) {
         Login login = new Login();
-        Optional<Usuario> usuario = usuarioService.getByUsuario(user);
+        System.out.println("Usuario "+loginReq.getUsuario());
+        Optional<Usuario> usuario = usuarioService.getByUsuario(loginReq.getUsuario());
         if (!usuario.isEmpty()) {
-            login = new Login(user, "token-asdasd123");
+            login = new Login(loginReq.getUsuario(), "token-asdasd123");
             login.setStatus("success");
         } else {
             login.setStatus("error");
