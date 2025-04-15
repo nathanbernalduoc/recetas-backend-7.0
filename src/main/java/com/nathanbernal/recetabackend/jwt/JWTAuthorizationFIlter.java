@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JWTAuthorizationFilter extends OncePerRequestFilter {
+public class JWTAuthorizationFIlter extends OncePerRequestFilter {
 
     private Claims setSigningKey(HttpServletRequest request) {
 
@@ -38,6 +38,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
     
     private void setAuthentication(Claims claims) {
+        @SuppressWarnings("unchecked")
         List<String> authorities = (List<String>) claims.get("authorities");
         UsernamePasswordAuthenticationToken auth = 
             new UsernamePasswordAuthenticationToken(claims.getSubject(), null,

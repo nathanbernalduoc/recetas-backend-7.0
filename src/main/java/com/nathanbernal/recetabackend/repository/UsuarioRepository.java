@@ -1,13 +1,13 @@
 package com.nathanbernal.recetabackend.repository;
 
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import com.nathanbernal.recetabackend.model.Usuario;
 
-@Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    public Optional<Usuario> findByUsuario(String usuario);
+public interface UsuarioRepository extends JpaRepository<Usuario,Long>
+{
+
+    // public Optional<Usuario> findByUsuario(String usuario);
+    Usuario findByUsuario(String username);
 
 }
